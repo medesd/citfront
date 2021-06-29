@@ -1,0 +1,441 @@
+<div [class.d-none]="hides" class="container">
+  <form (ngSubmit)="onSubmit(f)" #f="ngForm">
+    <div class="row justify-content-center">
+      <div class="col-xs">
+        <h2 class="d-inline">Bordereau Formulaire</h2>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md">
+        <div class="form-group">
+          <label for="project">Projet :</label>
+          <input ngModel type="text" (change)="getProjects($event.target)" autocomplete="off" list="projects"
+                 class="form-control" name="project" id="project">
+        </div>
+      </div>
+
+      <div class="col-md">
+        <div class="form-group">
+          <label for="date">Date:</label>
+          <input [ngModel]="getDate | date: 'yyyy-LL-dd'" type="date" class="form-control" name="date" id="date">
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md">
+        <div class="form-group">
+          <label for="numDossier">N°Dosser:</label>
+          <input [ngModel]="project?.id" required type="text" class="form-control" name="numDossier" id="numDossier">
+        </div>
+      </div>
+      <div class="col-md">
+        <div class="form-group">
+          <label for="maitreDeLouvrage">Maitre de l'Ouvrage :</label>
+          <input [ngModel]="project?.maitre_DOUVRAGE" type="text" class="form-control" name="maitreDeLouvrage"
+                 id="maitreDeLouvrage">
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md">
+        <div class="form-group">
+          <label for="destinataire">Destinataire :</label>
+          <input ngModel type="text" class="form-control" name="destinataire" id="destinataire">
+        </div>
+      </div>
+      <div class="col-md">
+        <div class="form-group">
+          <label for="refCourrier">Réf courrier :</label>
+          <input [ngModel]="ref" type="text" required pattern="^(CIT\/BDE)\d{1,3}[\/]\d{4}(\/AB\/HB)$"
+                 class="form-control" name="refCourrier" id="refCourrier">
+        </div>
+      </div>
+    </div>
+    <datalist id="projects">
+      <option *ngFor="let p of projects">{{p.nom_PROJECT}}</option>
+    </datalist>
+    <br/>
+    <div class="row p-2 w-50 m-auto">
+      <div class="col">
+        <div class="row">
+          <p>Objet du Bordereau* :</p>
+        </div>
+        <div class="row">
+          <div class="col ml-3">
+                <span>
+              <input [ngModel]="false" name="information" type="checkbox" id="test1"/>
+              <label for="test1"></label>
+            </span>Pour Information
+          </div>
+          <div class="col">
+            <span>
+              <input [ngModel]="false" name="avis" type="checkbox" id="test2"/>
+              <label for="test2"></label>
+            </span>Pour Avis
+          </div>
+        </div>
+        <div class="row mt-1">
+          <div class="col ml-3">
+
+                  <span>
+              <input [ngModel]="false" name="attribution" type="checkbox" id="test3"/>
+              <label for="test3"></label>
+            </span>Pour Attribution
+
+          </div>
+          <div class="col">
+
+                 <span>
+              <input [ngModel]="false" name="diffusion" type="checkbox" id="test4"/>
+              <label for="test4"></label>
+            </span>Pour Diffusion
+
+          </div>
+        </div>
+        <div class="row mt-1">
+          <div class="col ml-3">
+
+                  <span>
+              <input [ngModel]="false" name="approbation" type="checkbox" id="test5"/>
+              <label for="test5"></label>
+            </span>Pour Approbation
+
+          </div>
+          <div class="col">
+
+                 <span>
+              <input [ngModel]="false" name="notification" type="checkbox" id="test6"/>
+              <label for="test6"></label>
+            </span>Pour Notification
+
+          </div>
+        </div>
+        <div class="row justify-content-center mt-1 mb-1">
+          <div class="col-5">
+
+                 <span>
+              <input [ngModel]="false" name="execution" type="checkbox" id="test7"/>
+              <label for="test7"></label>
+            </span>Pour Exécution
+
+          </div>
+        </div>
+      </div>
+    </div>
+    <br/>
+    <div class="row justify-content-center">
+      <table id="table" class="table table-bordered m-0" style="max-width: 960px;min-width: 959px">
+        <thead>
+        <tr class="text-center">
+          <th>Désignation des Pièces</th>
+          <th>Nombre de copies</th>
+          <th>Observation</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let p of numbers">
+          <td class="align-middle">
+            <ul>
+              <li class="border" (keydown)="some($event)" style="outline: unset" contenteditable="true">...</li>
+            </ul>
+          </td>
+          <td class="align-middle">
+            <p class="border text-center" (keydown)="some($event)" style="outline: unset" contenteditable="true">Nombre
+              de
+              copies</p>
+          </td>
+          <td class="align-middle">
+            <div [popper]="popper" [popperStyles]="{padding:'0',border:'none',width:'43px'}" [popperTrigger]="'click'"
+                 [popperPlacement]="'right'">
+              <p class="border" (keydown)="some($event)" style="outline: unset" contenteditable="true">...</p>
+              <popper-content #popper>
+                <button type="button" class="btn btn-info mb-1" (click)="addCell($event)"><i
+                  class="fas fa-arrow-alt-circle-up"></i></button>
+                <button type="button" class="btn btn-info" (click)="deleteCell($event)"><i
+                  class="fas fa-arrow-alt-circle-down"></i>
+                </button>
+              </popper-content>
+            </div>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+    <br/>
+    <div class="row justify-content-center">
+      <div class="col-xs text-center">
+        <a (click)="addNewCell(true)" class="mr-1 text-success"><i class="fas fa-2x fa-plus-circle"></i></a>
+        <a (click)="addNewCell(false)" class="ml-1 text-danger"><i class="fas fa-2x fa-minus-circle"></i></a>
+      </div>
+    </div>
+
+    <button [disabled]="!f.valid" type="submit" class="btn btn-success">Afficher</button>
+  </form>
+</div>
+<button *ngIf="hides" [class.d-none]="imp" (click)="hidediv()" style="margin-left: 37.5%"
+        class="btn btn-outline-primary mb-2 w-25"
+><i
+  class="fas fa-arrow-left"></i></button>
+<div *ngIf="hides" class="d-flex flex-column justify-content-between"
+     style="width: 960px;margin: 0 auto;height: 1410px;color: black">
+  <div>
+    <div style="border: 2px solid black" class="container">
+      <div class="row">
+        <div style="border-right: 2px solid black" class="col">
+          <div class="row">
+            <div class="col-5">
+              <img src="../../../../assets/logo.png" alt="cit"/>
+            </div>
+            <div style="border-left: 2px solid black" class="col pl-4 mr-2 d-flex flex-column justify-content-around">
+              <div style="border-bottom: 2px solid black" class="row mt-5"><h6>BUREAU D’ETUDES TECHNIQUES</h6></div>
+              <div class="row mb-5"><h6>BUREAU DE GESTION DES PROJETS</h6></div>
+            </div>
+          </div>
+
+        </div>
+        <div class="col">
+          <div class="row"><p class="ml-2 mt-4">Objet du Bordereau* :</p></div>
+          <div class="row">
+            <div class="col ml-3">
+                <span>
+              <input [checked]="bordereau?.information" type="checkbox" id="stest1"/>
+              <label for="stest1"></label>
+            </span>Pour Information
+            </div>
+            <div class="col">
+            <span>
+              <input [checked]="bordereau?.avis" type="checkbox" id="stest2"/>
+              <label for="stest2"></label>
+            </span>Pour Avis
+            </div>
+          </div>
+          <div class="row mt-1">
+            <div class="col ml-3">
+
+                  <span>
+              <input [checked]="bordereau?.attribution" type="checkbox" id="stest3"/>
+              <label for="stest3"></label>
+            </span>Pour Attribution
+
+            </div>
+            <div class="col">
+
+                 <span>
+              <input [checked]="bordereau?.diffusion" type="checkbox" id="stest4"/>
+              <label for="stest4"></label>
+            </span>Pour Diffusion
+
+            </div>
+          </div>
+          <div class="row mt-1">
+            <div class="col ml-3">
+
+                  <span>
+              <input [checked]="bordereau?.approbation" type="checkbox" id="stest5"/>
+              <label for="stest5"></label>
+            </span>Pour Approbation
+
+            </div>
+            <div class="col">
+
+                 <span>
+              <input [checked]="bordereau?.notification" type="checkbox" id="stest6"/>
+              <label for="stest6"></label>
+            </span>Pour Notification
+
+            </div>
+          </div>
+          <div class="row justify-content-center mt-1 mb-1">
+            <div class="col-5">
+                 <span>
+              <input [checked]="bordereau?.execution" type="checkbox" id="stest7"/>
+              <label for="stest7"></label>
+            </span>Pour Exécution
+
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="border: 1px solid black;border-top: 2px solid black" class="row">
+        <div style="border-right: 1px solid black" class="col">
+          <h5 class="text-center">Réf courrier : {{bordereau?.refCourrier}}</h5>
+        </div>
+        <div style="border-left: 1px solid black" class="col">
+          <h5 class="text-center">*Cocher le(s) lot (s) objet d’inspection</h5>
+        </div>
+      </div>
+    </div>
+    <br/>
+    <div class="container" style="width: 960px">
+      <div class="row justify-content-between">
+        <div style="border: 2px solid black" class="col-5 p-3">
+          <div class="m-0">N°Dossier : {{bordereau?.numDossier}}</div>
+        </div>
+        <div class="row m-0" style="width: 400px">
+          <div style="border: 2px solid black;border-right: 1px solid black" class="col p-3">
+            <p class="m-0 text-center">Date : {{bordereau?.date | date: 'dd/LL/yyyy'}}</p>
+          </div>
+          <div style="border: 2px solid black;border-left: 1px solid black" class="col p-3">
+            <p class="m-0 text-center">Page 1/{{numPages}}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br/>
+    <div style="border: 2px solid black" class="container">
+      <div style="border-bottom: 2px solid black" class="row">
+        <div style="border-right: 2px solid black" class="col-3 d-flex flex-column justify-content-center p-2">
+          <p class="m-0">Projet : </p>
+        </div>
+        <div class="col p-2">
+          <p class="m-0">{{bordereau?.project}}</p>
+        </div>
+      </div>
+      <div class="row">
+        <div style="border-right: 2px solid black" class="col-3 p-2">
+          <p class="m-0">Maitre de l'Ouvrage : </p>
+        </div>
+        <div class="col p-2">
+          <p class="m-0">{{bordereau?.maitreDeLouvrage}}</p>
+        </div>
+      </div>
+    </div>
+    <br/>
+    <div style="border: 2px solid black" class="container">
+      <div class="row">
+        <div style="border-right: 2px solid black" class="col-3 p-2">
+          <p class="m-0">Destinataire : </p>
+        </div>
+        <div class="col p-2">
+          <p class="m-0">{{bordereau?.destinataire}}</p>
+        </div>
+      </div>
+    </div>
+    <br/>
+    <div style="border: 2px solid black" class="container">
+      <div class="row">
+        <div class="col">
+          <h3 class="text-center">BORDEREAU D’ENVOI</h3>
+        </div>
+      </div>
+    </div>
+    <br/>
+    <table style="border: 2px solid black" class="table table-bordered">
+      <thead>
+      <tr class="text-center">
+        <th style="border: 1px solid black">Désignation des Pièces</th>
+        <th style="border: 1px solid black">Nombre de copies</th>
+        <th style="border: 1px solid black">Observation</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let p of table1">
+        <td *ngIf="p.dsignation" style="border: 1px solid black" class="align-middle pl-5"
+            [innerHTML]="p.dsignation">
+        </td>
+        <td *ngIf="p.numCopies" style="border: 1px solid black" class="align-middle text-center"
+            [innerHTML]="p.numCopies">
+        </td>
+        <td *ngIf="p.observation" [rowSpan]="p.observation.rowSpan" style="border: 1px solid black"
+            class="align-middle"
+            [innerHTML]="removeBorder(p.observation.innerHTML)">
+        </td>
+      </tr>
+      </tbody>
+    </table>
+    <br/>
+    <div *ngIf="numPages===1" class="row justify-content-end mr-5 mb-3">
+      <div class="col-xs" style="width: 160px;height: 120px;border: 2px solid black"></div>
+    </div>
+  </div>
+  <div>
+    <hr style="border-top: 1px solid black" class="m-0"/>
+    <div style="width: 990px" class="row justify-content-between pl-3 pr-3">
+      <div style="right: 0" class="col-xs font-italic">
+        reference : {{bordereau?.refCourrier}}
+      </div>
+      <div class="col-xs font-italic">
+        Page 1/{{numPages}}
+      </div>
+    </div>
+  </div>
+</div>
+<br/>
+<br/>
+<br/>
+<div *ngIf="hides">
+  <div *ngFor="let s of table;index as i" class="d-flex flex-column justify-content-between"
+       style="max-width: 960px;margin: auto;height: 1510px">
+    <div>
+      <table style="border: 2px solid black;width: 960px" class="table table-bordered">
+        <thead>
+        <tr class="text-center">
+          <th style="border: 2px solid black">Désignation des Pièces</th>
+          <th style="border: 2px solid black">Nombre de copies</th>
+          <th style="border: 2px solid black">Observation</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let p of s">
+          <td *ngIf="p?.dsignation" style="border: 2px solid black" class="align-middle pl-5"
+              [innerHTML]="p.dsignation">
+          </td>
+          <td *ngIf="p?.numCopies" style="border: 2px solid black" class="align-middle text-center"
+              [innerHTML]="p.numCopies">
+          </td>
+          <td *ngIf="p?.observation" [rowSpan]="p.observation.rowSpan" style="border: 1px solid black"
+              class="align-middle"
+              [innerHTML]="removeBorder(p.observation.innerHTML)">
+          </td>
+        </tr>
+        </tbody>
+      </table>
+      <div *ngIf="numPages===i+2" class="row justify-content-end mr-5 mb-3">
+        <div class="col-xs" style="width: 160px;height: 120px;border: 2px solid black"></div>
+      </div>
+    </div>
+    <div>
+      <hr style="border-top: 1px solid black" class="m-0"/>
+      <div style="width: 990px" class="row justify-content-between pl-3 pr-3">
+        <div style="right: 0" class="col-xs font-italic">
+          reference : {{bordereau?.refCourrier}}
+        </div>
+        <div class="col-xs font-italic">
+          Page {{i + 2}}/{{numPages}}
+        </div>
+      </div>
+      <br/>
+      <br/>
+      <br/>
+    </div>
+  </div>
+  <div style="position: fixed;bottom: 20px;right: 20px" *ngIf="!imp">
+    <div class="container">
+      <div class="row text-center">
+        <div class="col d-block">
+          <button class="btn btn-primary btn-lg mr-1" (click)="captureScreen(true)"><i class="fas fa-print"></i>
+          </button>
+          <button (click)="captureScreen(false)" class="btn btn-success btn-lg ml-1"><i
+            class="fas fa-download"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="d-none" id="div">
+  <div *ngFor="let p of placeHolder" [popper]="popper" [popperStyles]="{padding:'0',border:'none',width:'43px'}"
+       [popperTrigger]="'click'"
+       [popperPlacement]="'right'">
+    <p class="border" (keydown)="some($event)" style="outline: unset" contenteditable="true">...</p>
+    <popper-content #popper>
+      <button type="button" class="btn btn-info mb-1" (click)="addCell($event)"><i
+        class="fas fa-arrow-alt-circle-up"></i></button>
+      <button type="button" class="btn btn-info" (click)="deleteCell($event)"><i
+        class="fas fa-arrow-alt-circle-down"></i>
+      </button>
+    </popper-content>
+  </div>
+</div>
+

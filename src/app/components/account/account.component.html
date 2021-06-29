@@ -1,0 +1,129 @@
+<div class="container" *ngIf="checkLogin()">
+  <div class="row justify-content-center">
+    <div class="col-xs-12"><h2>Bienvenue {{getUsername()}}</h2></div>
+  </div>
+  <hr/>
+  <br/>
+  <div class="row justify-content-center">
+    <div class="col-xs-12"><h3>Gerer Compte {{getUsername()}}</h3></div>
+  </div>
+  <div class="row text-center">
+    <div class="col">
+      <h4>Change votre Mot de passe</h4>
+    </div>
+    <div class="col">
+      <a>*******</a>
+    </div>
+    <div class="col">
+      <button type="button" class="btn btn-outline-secondary" data-toggle="modal" data-target="#myModal">
+        Changer
+      </button>
+      <form (ngSubmit)="onSubmit(f)" #f="ngForm">
+        <!-- The Modal -->
+        <div class="modal fade" id="myModal">
+          <div class="modal-dialog">
+            <div class="modal-content">
+
+              <!-- Modal Header -->
+              <div class="modal-header">
+                <h4 class="modal-title">Change votre Mot de passe</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+              </div>
+
+              <!-- Modal body -->
+              <div class="modal-body">
+                <ng-template [ngIf]="lerror">
+                  <div class="alert alert-danger" role="alert" #alert>
+                    {{lerror}}
+                  </div>
+                </ng-template>
+                <div class="form-group">
+                  <label for="cur_password">Current mot de passe</label>
+                  <input ngModel required type="password" autocomplete="off" class="form-control" name="cur_password"
+                         id="cur_password">
+                </div>
+                <div class="form-group">
+                  <label for="new_password">Nouvelle mot de passe</label>
+                  <input ngModel required type="password" autocomplete="off" class="form-control" name="new_password"
+                         id="new_password">
+                </div>
+
+                <div class="form-group">
+                  <label for="con_new_password">Confermer mot de passe</label>
+                  <input ngModel required type="password" autocomplete="off"
+                         class="form-control" name="con_new_password" id="con_new_password">
+                </div>
+              </div>
+
+              <!-- Modal footer -->
+              <div class="modal-footer">
+                <button type="submit" class="btn btn-outline-success">Changer</button>
+                <button type="button" class="btn btn-outline-danger" data-dismiss="modal">Close</button>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <br/>
+
+  <div class="row text-center">
+    <div class="col">
+      <h4>Change votre Nom d'utilusateur</h4>
+    </div>
+    <div class="col">
+      <a>{{getUsername()}}</a>
+    </div>
+    <div class="col">
+      <button type="button" class="btn btn-outline-secondary" data-toggle="modal" data-target="#mModal">
+        Changer
+      </button>
+      <form (ngSubmit)="onChange(fm)" #fm="ngForm">
+        <!-- The Modal -->
+        <div class="modal fade" id="mModal">
+          <div class="modal-dialog">
+            <div class="modal-content">
+
+              <!-- Modal Header -->
+              <div class="modal-header">
+                <h4 class="modal-title">Change votre Nom d'utilusateur</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+              </div>
+
+              <!-- Modal body -->
+              <div class="modal-body">
+                <ng-template [ngIf]="error">
+                  <div class="alert alert-danger" role="alert" #alert>
+                    {{error}}
+                  </div>
+                </ng-template>
+                <div class="form-group">
+                  <label for="username">nouvelle Nom d'utilusateur</label>
+                  <input ngModel required type="text" class="form-control" name="username" id="username">
+                </div>
+                <div class="form-group">
+                  <label for="password">Mot de passe</label>
+                  <input ngModel required type="password" autocomplete="off" class="form-control" name="password"
+                         id="password">
+                </div>
+              </div>
+
+              <!-- Modal footer -->
+              <div class="modal-footer">
+                <button type="submit" class="btn btn-outline-success">Changer</button>
+                <button type="button" class="btn btn-outline-danger" data-dismiss="modal">Close</button>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="row justify-content-center">
+    <app-register class="w-100"></app-register>
+  </div>
+</div>

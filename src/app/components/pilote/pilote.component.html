@@ -1,0 +1,130 @@
+<div *ngIf="pilote">
+  <h3 style="text-align: center">{{pilote.nom}}</h3>
+  <div class="container-fluid">
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <ul class="nav nav-tabs">
+          <li class="nav-item">
+            <a class="nav-link cursor" [ngClass]="{active:details===0}" (click)="showPilote(0)">Details</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link cursor" [ngClass]="{active:details===1}" (click)="showPilote(1)">Projets en
+              cours</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link cursor" [ngClass]="{active:details===2}" (click)="showPilote(2)">Projets
+              archeves</a>
+          </li>
+        </ul>
+      </div>
+      <table *ngIf="details===0" class="table" >
+        <tbody *ngIf="!set">
+        <tr>
+          <td>CIN</td>
+          <td>{{pilote.cin}}</td>
+        </tr>
+        <tr>
+          <td>Date de naissance</td>
+          <td>{{formatDate(pilote.date_naissance)}}</td>
+        </tr>
+        <tr>
+          <td>Diplome</td>
+          <td>{{pilote.diplome}}</td>
+        </tr>
+        <tr>
+          <td>Annonciete</td>
+          <td>{{pilote.annoncite}}</td>
+        </tr>
+        <tr>
+          <td>Experence</td>
+          <td>{{pilote.experence_instant}}</td>
+        </tr>
+        <tr>
+          <td>N° CNSS</td>
+          <td>{{pilote.n_cnss}}</td>
+        </tr>
+        <tr>
+          <td>Post Actual</td>
+          <td>{{pilote.post_actual}}</td>
+        </tr>
+
+
+        </tbody>
+        <tfoot *ngIf="checkAdmin()">
+        <tr>
+          <td>
+            <button class="btn btn-outline-danger" (click)="removePilote(pilote.id)">Supprimer</button>
+            <button class="btn btn-outline-info ml-sm-3" data-toggle="modal" data-target="#editpilote">Modifier</button>
+            <div class="modal fade" id="editpilote">
+              <app-edit-pilote (evt)="onEdit($event)" [pilote]="pilote"></app-edit-pilote>
+            </div>
+          </td>
+        </tr>
+        </tfoot>
+      </table>
+      <table class="table table-striped" *ngIf="details===2" style="text-align: center">
+        <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">NOM PROJET</th>
+          <th scope="col">N° MARCHE</th>
+          <th scope="col">N° CONTRAT</th>
+          <th scope="col">MAITRE DOUVRAGE</th>
+          <th scope="col">BUREAU DE CONTROLE</th>
+          <th scope="col">LABORATOIRE</th>
+          <th scope="col">ARCHITECTE</th>
+          <th scope="col">ENTREPRISE</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let tb of project_fin;index as i">
+          <th scope="row">{{tb.id}}</th>
+          <td>{{tb.nom_PROJECT}}</td>
+          <td>{{tb.num_MARCHE}}</td>
+          <td>{{tb.num_CONTRAT}}</td>
+          <td>{{tb.maitre_DOUVRAGE}}</td>
+          <td>{{tb.bureau_DE_CONTROLE}}</td>
+          <td>{{tb.laboratoire}}</td>
+          <td>{{tb.architecte}}</td>
+          <td>{{tb.entreprise}}</td>
+          <td>
+            <button class="btn btn-outline-info" [routerLink]="['/details/',tb.id]">Details</button>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+      <table *ngIf="details===1" class="table table-striped" style="text-align: center">
+        <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">NOM PROJET</th>
+          <th scope="col">N° MARCHE</th>
+          <th scope="col">N° CONTRAT</th>
+          <th scope="col">MAITRE DOUVRAGE</th>
+          <th scope="col">BUREAU DE CONTROLE</th>
+          <th scope="col">LABORATOIRE</th>
+          <th scope="col">ARCHITECTE</th>
+          <th scope="col">ENTREPRISE</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let tb of project_en;index as i">
+          <th scope="row">{{tb.id}}</th>
+          <td>{{tb.nom_PROJECT}}</td>
+          <td>{{tb.num_MARCHE}}</td>
+          <td>{{tb.num_CONTRAT}}</td>
+          <td>{{tb.maitre_DOUVRAGE}}</td>
+          <td>{{tb.bureau_DE_CONTROLE}}</td>
+          <td>{{tb.laboratoire}}</td>
+          <td>{{tb.architecte}}</td>
+          <td>{{tb.entreprise}}</td>
+          <td>
+            <button class="btn btn-outline-info" [routerLink]="['/details/',tb.id]">Details</button>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</div>

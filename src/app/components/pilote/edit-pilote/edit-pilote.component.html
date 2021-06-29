@@ -1,0 +1,65 @@
+<div class="modal-dialog" *ngIf="pilote">
+  <div class="modal-content">
+
+    <!-- Modal Header -->
+    <div class="modal-header">
+      <h4 class="modal-title">Modifer un Pilote</h4>
+      <button type="button" class="close" data-dismiss="modal">×</button>
+    </div>
+
+    <form (submit)="onEdit(frm)" #frm="ngForm">
+      <!-- Modal body -->
+      <div class="modal-body">
+
+        <div class="form-group">
+          <label>Nom :
+            <input [ngModel]="pilote.nom" required type="text" name="nom" class="form-control">
+          </label>
+          <label class="ml-sm-5">CIN :
+            <input [ngModel]="pilote.cin" required pattern="[a-zA-Z][0-9]{6}|[a-zA-Z][a-zA-Z][0-9]{6}" type="text" name="cin" class="form-control">
+          </label>
+
+        </div>
+        <div class="form-group">
+          <label>Date de naissance :
+            <input [ngModel]="daten"  required type="date" name="date_naissance" class="form-control">
+          </label>
+
+          <label class="ml-sm-5">Diplome :
+            <input [ngModel]="pilote.diplome" required type="text" name="diplome" class="form-control">
+          </label>
+
+        </div>
+        <div class="form-group">
+          <label>Numero de CNSS :
+            <input [ngModel]="pilote.n_cnss" required type="text" name="n_cnss" class="form-control">
+          </label>
+
+          <label class="ml-sm-5">Post actual :
+            <input [ngModel]="pilote.post_actual" required type="text" name="post_actual" class="form-control">
+          </label>
+
+        </div>
+        <div class="form-group">
+          <label>Date d'entrer :
+            <input [ngModel]="entry" required type="date" name="entry_date" class="form-control">
+          </label>
+
+          <label class="ml-sm-5">Experence :
+            <input [ngModel]="exp" required name="experence" type="date" class="form-control">
+          </label>
+
+        </div>
+
+      </div>
+
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button type="submit" [disabled]="!frm.valid" *ngIf="!loding" class="btn btn-success">Modifier</button>
+        <app-spinner *ngIf="loding"></app-spinner>
+        <button type="reset" class="btn btn-danger">reinitialiser</button>
+        <button type="button" #close class="btn btn-info" data-dismiss="modal">Fermer</button>
+      </div>
+    </form>
+  </div>
+</div>

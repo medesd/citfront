@@ -1,0 +1,8 @@
+<app-header *ngIf="checkUser() && !authService.hide"></app-header>
+<ng-template [ngIf]="checkUser()">
+  <br/>
+  <br/>
+  <br/>
+</ng-template>
+
+<router-outlet></router-outlet>

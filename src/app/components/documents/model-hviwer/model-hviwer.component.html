@@ -1,0 +1,23 @@
+<div class="container" *ngIf="pdf">
+  <br/>
+  <br/>
+  <br/>
+  <table class="table table-bordered mt-5">
+    <tr>
+      <th>Reference</th>
+      <td>{{pdf.reference}}</td>
+    </tr>
+    <tr>
+      <th>Date de sortie</th>
+      <td>{{pdf.entryDate | date: 'dd/LL/YYYY'}}</td>
+    </tr>
+    <tr>
+      <th>Affaire</th>
+      <td>{{pdf.name | replace}}</td>
+    </tr>
+  </table>
+  <div class="row mt-5 justify-content-center">
+    <button (click)="deleteModel(pdf.reference)" class="btn btn-danger mr-1">Supprimer</button>
+    <button (click)="showPdf()" class="btn btn-success ml-1">Telecharger</button>
+  </div>
+</div>

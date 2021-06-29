@@ -1,0 +1,354 @@
+<!-------------------------- ref ---------------------------->
+<div *ngIf="!submit" class="container">
+  <div class="row">
+    <form (ngSubmit)="make_ref(f)" #f="ngForm">
+      <div class="row justify-content-center">
+        <div class="col"><label for="referance">Numero de Referance</label></div>
+        <div class="col">
+          <div class="form-group">
+            <input type="number" pattern="^[0-9]+$" required [ngModel]="cookie" class="form-control"
+                   name="referance" id="referance">
+          </div>
+        </div>
+      </div>
+      <div class="row justify-content-center">
+        <div class="col"><label for="year">Anne</label></div>
+        <div class="col">
+          <div class="form-group">
+            <input type="number" pattern="^[0-9]+$" required [ngModel]="year" class="form-control" name="year"
+                   id="year">
+          </div>
+        </div>
+      </div>
+      <div class="row text-center">
+        <div class="col">
+          <button class="btn btn-outline-success">Afficher</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<!-------------------------- form ---------------------------->
+<div [class.d-none]="!cons" *ngIf="submit" class="container">
+  <form (ngSubmit)="onSubmit(f)" #f="ngForm">
+    <div class="row">
+      <div class="col">
+        <div class="form-group">
+          <label for="nom">Affaire: </label>
+          <input id="nom" required type="text" [ngModel]="model1?model1.affaire:null" name="affaire"
+                 (change)="sendToImp($event)"
+                 class="form-control text-center"
+                 autocomplete="off"
+                 list="list">
+          <datalist id="list">
+            <option *ngFor="let p of projects">{{p.nom_PROJECT}}</option>
+          </datalist>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col">
+        <div class="form-group">
+          <label for="maitre">Maitre d'Ouvrage: </label>
+          <input name="maitreDouvrage" required [ngModel]="model1?model1.maitreDouvrage:null" id="maitre"
+                 type="text"
+                 class="form-control text-center" autocomplete="off">
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col">
+        <div class="form-group">
+          <label for="dossier">N° dossier: </label>
+          <input id="dossier" required name="numDosser" [ngModel]="model1?model1.numDosser:null" type="text"
+                 class="form-control text-center"
+
+                 autocomplete="off">
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col">
+        <div class="form-group">
+          <label for="marche">N° Marche: </label>
+          <input id="marche" required name="numMarche" type="text" [ngModel]="model1?model1.numMarche:null"
+                 class="form-control text-center"
+                 autocomplete="off">
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col">
+        <div class="form-group">
+          <label for="date">Date: </label>
+          <input id="date" required [ngModel]="(model1?model1.date:formatDate()) | date: 'yyyy-LL-dd'" type="date"
+                 name="date"
+                 class="form-control text-center" autocomplete="off">
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col">
+        <div class="form-group">
+          <label for="mc">Missions confiées:</label>
+          <input type="text" id="mc" required [ngModel]="model1?model1.mc:null" name="mc"
+                 class="form-control text-center">
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col">
+        <div class="form-group">
+          <label for="nm">Nature de la mission:</label>
+          <input type="text" id="nm" required [ngModel]="model1?model1.nm:null" name="nm"
+                 class="form-control text-center">
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col">
+        <div class="form-group">
+          <label for="ref">Ref:</label>
+          <input type="text" id="ref" placeholder="CIT-M000/AAAA/NN/PP" required [ngModel]="ref" name="ref"
+                 class="form-control text-center">
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col">
+        <div class="form-group">
+          <label for="acr">Auteur du compte rendu:</label>
+          <input type="text" id="acr" required [ngModel]="model1?model1.acr:null" name="acr"
+                 class="form-control text-center">
+        </div>
+      </div>
+    </div>
+
+
+    <div class="row">
+      <div class="col">
+        <div class="form-group">
+          <label for="signature">Signature:</label>
+          <input type="file" id="signature" required ngModel name="signature"
+                 (change)="f.value.signature=makeSignature($event)"
+                 accept=".jpeg,.png,.jpg" class="form-control text-center">
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col">
+        <button type="submit" [disabled]="!f.valid" class="btn btn-outline-primary">Consulter</button>
+      </div>
+    </div>
+  </form>
+</div>
+<!-------------------------- page 1 ---------------------------->
+<button [class.d-none]="imp" style="margin-left: 37.5%" *ngIf="!cons" class="btn btn-outline-primary mb-2 w-25"
+        (click)="editInfo()"><i
+  class="fas fa-arrow-left"></i></button>
+<div [class.d-none]="cons">
+  <div *ngIf="model1" style="width: 950px;max-height: 1420px;height: 1420px"
+       class="d-flex flex-column justify-content-between container-fluid">
+
+    <div id="signrem" class="d-block">
+      <div>
+        <div class="row">
+          <div class="col text-center border">
+            <img class="m-1" src="../../../../assets/cit.png" alt="cit">
+          </div>
+          <div class="col border">
+            <br/>
+            <br/>
+            <h3 class="font-weight-bold">CONSEIL D’INGENIERIE TENSIFT</h3>
+            <p class="font-weight-bold" style="font-size: 15px">Etudes Techniques, Assistance Maîtrise D’Ouvrage,
+              Maîtrise
+              d’Œuvre d’Exécution, Ordonnancement, Pilotage et
+              Coordination.</p>
+            <hr/>
+            <p>Rés Salma - App 03- Avenue Allal El Fassi – 40070 Marrakech, Maroc -
+              Fax: + (212) 0524291516 / Tél: + (212) 0524290947 /
+              <a href="mailto:contact@cit.ma">contact@cit.ma</a></p>
+          </div>
+        </div>
+        <div class="row">
+
+          <div class="col border">
+            <div class="row">
+              <div class="col " style="font-size: 23px">
+                <span>Marche : </span><span class="font-weight-bold">{{model1.numMarche}}</span></div>
+            </div>
+            <hr class="m-0"/>
+            <div class="row">
+              <div class="col" style="font-size: 23px"><span>Affaire : </span><span
+                class="font-weight-bold">{{model1.affaire}}</span>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="col border"><h4>Missions confiées :</h4>
+            <h5 class="text-capitalize">&nbsp;&nbsp;&nbsp;-{{model1.mc}}</h5></div>
+        </div>
+
+        <div class="row">
+          <div class="col border"><h4>Maitre d'Ouvrage : {{model1.maitreDouvrage}}</h4></div>
+          <div class="col border"><h4>Nature de la mission :</h4>
+            <h5 class="text-capitalize">&nbsp;&nbsp;&nbsp;-{{model1.nm}}</h5></div>
+        </div>
+        <div class="row">
+          <div class="col border"><h4>Réf : <span style="font-size: 19px" class="font-weight-bold">{{model1.ref}}</span>
+          </h4></div>
+          <div class="col border"><h4>N° dossier : {{model1.numDosser}}</h4></div>
+          <div class="col border"><h4>Date : {{model1.date | date:'dd/LL/YYYY'}}</h4></div>
+          <div class="col-xs-12 pl-1 pr-1 border"><h5>{{numPages}} Page</h5></div>
+        </div>
+      </div>
+      <br/>
+      <div class="row text-center">
+        <div class="col border"><h5>PV d’examen des documents</h5></div>
+      </div>
+      <div class="row">
+        <div class="container-fluid border border-top-0">
+          <div class="row text-center">
+            <div class="col"><p class="border border-top-0">Désignation des documents examinés</p></div>
+          </div>
+          <div class=" m-2 row">
+            <div class="col">
+              <div [ngxSummernote]="config1"></div>
+            </div>
+          </div>
+
+          <ng-container>
+            <br/>
+            <div class="row m-2 text-center" [class.d-none]="max1">
+              <div class="col border">
+                <h4>Avis sur Examen des documents</h4>
+              </div>
+            </div>
+            <br>
+            <div class="row m-2" [class.d-none]="max1">
+              <form class="col">
+                <div class="editor">
+                  <div [ngxSummernote]="config2"></div>
+                </div>
+              </form>
+            </div>
+          </ng-container>
+          <br/>
+        </div>
+        <ng-template [ngIf]="(numPages)===1">
+          <div class="row ml-4 mr-4 w-100">
+            <div class="col"><p>Copie à : {{model1.date | date: 'dd/LL/yyyy'}}</p></div>
+            <div class="col text-right">
+              <div class="row"><span class="col">Auteur du compte rendu</span></div>
+              <div class="row">
+                <span class="col mr-3"><span *ngIf="model1.acr"
+                                             class="border-bottom">{{model1.acr.toUpperCase()}}</span></span>
+              </div>
+              <div class="row">
+                <div class="col-xs m-3">
+                  <div class="border" style="width: 180px;height: 90px;margin-left: 320px">
+                    <img *ngIf="!cons" [src]="src" width="178" height="87" alt="img">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-template>
+      </div>
+      <br *ngIf="numPages>1"/>
+    </div>
+    <div class="d-block">
+      <hr class="m-0 p-0"/>
+      <div class="row">
+        <div class="col text-left"><span><i>CIT -  Affaire n°  {{model1.numDosser}}</i></span></div>
+        <div class="col text-right"><span><i>1 | Page</i></span></div>
+      </div>
+    </div>
+  </div>
+</div>
+<br/>
+<br/>
+<br/>
+<!-------------------------- next pages ---------------------------->
+<div [class.d-none]="cons" *ngFor="let n of pageNum">
+  <div style="height: 1440px;width: 950px" class="d-flex flex-column justify-content-between m-auto mydives">
+    <div class="border d-block nextdives">
+      <br/>
+      <div class="row m-4 text-center">
+        <div class="col border">
+          <h4>Avis sur Examen des documents</h4>
+        </div>
+      </div>
+      <br/>
+      <form class="col">
+        <div [ngxSummernote]="config"></div>
+      </form>
+      <br/>
+
+
+    </div>
+    <ng-template [ngIf]="(numPages)===n">
+      <div style="width: 950px" class="row m-auto">
+        <div class="col"><p>Copie à : {{model1.date | date: 'dd/LL/yyyy'}}</p></div>
+        <div class="col text-right">
+          <div class="row"><span class="col">Auteur du compte rendu</span></div>
+          <div class="row">
+            <span class="col mr-3"><span *ngIf="model1.acr"
+                                         class="border-bottom">{{model1.acr.toUpperCase()}}</span></span>
+          </div>
+          <div class="row">
+            <div class="col-xs m-3">
+              <div class="border" style="width: 180px;height: 90px;margin-left: 320px">
+                <img *ngIf="!cons" [src]="src" width="178" height="87" alt="img">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+    <br/>
+    <div style="width: 950px;align-self: center" class="d-block">
+      <hr class="m-0 p-0"/>
+      <div class="row">
+        <div class="col text-left"><span><i>CIT -  Affaire n°  {{model1.numDosser}}</i></span></div>
+        <div class="col text-right"><span><i>{{n}} | Page</i></span></div>
+      </div>
+    </div>
+  </div>
+  <br/>
+  <br/>
+  <br/>
+</div>
+<!-------------------------- controle pages ---------------------------->
+<ng-container *ngIf="!imp">
+  <div class="d-flex justify-content-center mt-4 mb-4" *ngIf="!cons">
+    <a (click)="addNewPage()" class="btn btn-success mr-2 mybtn">+</a>
+    <a (click)="removeNewPage()" class="btn btn-danger ml-2 mybtn">-</a>
+  </div>
+</ng-container>
+<div style="position: fixed;bottom: 20px;right: 20px" *ngIf="!imp">
+  <div [class.d-none]="cons" class="container">
+    <div class="row text-center">
+      <div class="col d-block">
+        <button class="btn btn-primary btn-lg mr-1" (click)="captureScreen(true)"><i class="fas fa-print"></i>
+        </button>
+        <button (click)="captureScreen(false)" class="btn btn-success btn-lg ml-1"><i
+          class="fas fa-download"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!--<button (click)="getEvent()">see</button>-->

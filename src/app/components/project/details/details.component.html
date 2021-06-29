@@ -1,0 +1,98 @@
+<app-spinner *ngIf="!loding"></app-spinner>
+<h3 style="text-align: center; padding: 5px" *ngIf="loding">{{project.nom_PROJECT}}</h3>
+<div class="container" *ngIf="loding">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <table class="table table-hover">
+        <tbody>
+        <tr>
+          <th scope="col">#</th>
+          <td>{{project.id}}</td>
+        </tr>
+        <tr>
+          <th scope="col">LOTS</th>
+          <td>
+            <span *ngIf="project.electricite">ELC(<a
+              [routerLink]="['/pilote/',project.electricite]">{{getName(project.electricite, 1)}}</a>)</span>
+            <span *ngIf="project.fluide"> FLD(<a
+              [routerLink]="['/pilote/',project.fluide]">{{getName(project.fluide, 2)}}</a>)</span>
+            <span *ngIf="project.vrd"> VRD(<a
+              [routerLink]="['/pilote/',project.vrd]">{{getName(project.vrd, 4)}}</a>)</span>
+            <span *ngIf="project.structure"> STR(<a
+              [routerLink]="['/pilote/',project.structure]">{{getName(project.structure, 3)}}</a>)</span>
+            <span *ngIf="project.cps"> CPS(<a
+              [routerLink]="['/pilote/',project.cps]">{{getName(project.cps, 3)}}</a>)</span>
+          </td>
+        </tr>
+        <tr>
+          <th scope="col">LOCALISATION</th>
+          <td>{{project.localisation}}</td>
+        </tr>
+        <tr>
+          <th scope="col">ANNE DEPART</th>
+          <td>{{project.anne_DEPART}}</td>
+        </tr>
+        <tr>
+          <th scope="col">ANNE FIN</th>
+          <td>{{project.anne_FIN ? project.anne_FIN : "-"}}</td>
+        </tr>
+        <tr>
+          <th scope="col">N°CONTRAT</th>
+          <td>{{project.num_CONTRAT}}</td>
+        </tr>
+
+        <tr>
+          <th scope="col">N° MARCHE</th>
+          <td>{{project.num_MARCHE}}</td>
+        </tr>
+        <tr>
+          <th scope="col">MAITRE DOUVRAGE</th>
+          <td>{{project.maitre_DOUVRAGE}}</td>
+        </tr>
+        <tr>
+          <th scope="col">BUREAU DE CONTROLE</th>
+          <td>{{project.bureau_DE_CONTROLE}}</td>
+        </tr>
+        <tr>
+          <th scope="col">LABORATOIRE</th>
+          <td>{{project.laboratoire}}</td>
+        </tr>
+        <tr>
+          <th scope="col">ARCHITECTE</th>
+          <td>{{project.architecte}}</td>
+        </tr>
+        <tr>
+          <th scope="col">ENTREPRISE</th>
+          <td>{{project.entreprise}}</td>
+        </tr>
+        <tr>
+          <th scope="col">PILOTE</th>
+          <ng-template [ngIf]="project.pilote && getName(project.pilote,0)!=null">
+            <td *ngIf="getName(project.pilote,0).indexOf('&')===-1"><a
+              [routerLink]="['/pilote/',project.pilote]">{{getName(project.pilote, 0)}}</a>
+            </td>
+            <td *ngIf="getName(project.pilote,0).indexOf('&')!==-1">
+              <a *ngIf="getPiloteNames(getName(project.pilote, 0))!=null"
+                 [routerLink]="['/pilote/',getPiloteNames(getName(project.pilote, 0)).id1]">{{getPiloteNames(getName(project.pilote, 0)).name1}}</a>,
+              <a *ngIf="getPiloteNames(getName(project.pilote, 0))!=null"
+                 [routerLink]="['/pilote/',getPiloteNames(getName(project.pilote, 0)).id2]">{{getPiloteNames(getName(project.pilote, 0)).name2}}</a>
+            </td>
+          </ng-template>
+
+          <td *ngIf="!project.pilote || getName(project.pilote,0)==null">-</td>
+
+        </tr>
+        </tbody>
+        <tfoot *ngIf="checkAdmin()">
+        <tr>
+          <td colspan="2">
+            <button class="btn btn-outline-danger mr-sm-3" (click)="deleteProject(project.id)">Supprimer</button>
+            <button class="btn btn-outline-success" [routerLink]="['/modifer',project.id]">Modifer
+            </button>
+          </td>
+        </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+</div>

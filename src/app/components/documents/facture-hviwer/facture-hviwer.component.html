@@ -1,0 +1,23 @@
+<div class="container" *ngIf="bordereau">
+  <br/>
+  <br/>
+  <br/>
+  <table class="table table-bordered mt-5">
+    <tr>
+      <th>Reference</th>
+      <td>{{bordereau.reference}}</td>
+    </tr>
+    <tr>
+      <th>Date de sortie</th>
+      <td>{{bordereau.entryDate | date: 'dd/LL/YYYY'}}</td>
+    </tr>
+    <tr>
+      <th>Affaire</th>
+      <td>{{bordereau.name | replace}}</td>
+    </tr>
+  </table>
+  <div class="row mt-5 justify-content-center">
+    <button (click)="deleteBordereau(bordereau.reference)" class="btn btn-danger mr-1">Supprimer</button>
+    <button (click)="showPdf()" class="btn btn-success ml-1">Telecharger</button>
+  </div>
+</div>

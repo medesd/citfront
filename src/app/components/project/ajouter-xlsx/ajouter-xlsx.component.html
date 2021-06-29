@@ -1,0 +1,66 @@
+<div class="container-fluid">
+  <div class="row justify-content-center">
+    <div class="col-xs-12 form-group">
+      <label for="file">Ajouter un fichier</label>
+      <input type="file" accept=".xlsx" class="form-control-file" id="file" (change)="onFileChange($event)"/>
+    </div>
+  </div>
+  <div class="row mt-3">
+    <div class="col">
+      <table *ngIf="show" class="table table-striped" style="text-align: center">
+        <thead>
+        <tr>
+          <th scope="col">NOM PROJET</th>
+          <th scope="col">N° MARCHE</th>
+          <th scope="col">N° CONTRAT</th>
+          <th scope="col">MAITRE DOUVRAGE</th>
+          <th scope="col">BUREAU DE CONTROLE</th>
+          <th scope="col">LABORATOIRE</th>
+          <th scope="col">ANNE DEPART</th>
+          <th scope="col">ANNE FIN</th>
+          <th scope="col">ARCHITECTE</th>
+          <th scope="col">ENTREPRISE</th>
+          <th scope="col">PILOTE</th>
+          <th scope="col">ELECTRICITE</th>
+          <th scope="col">VRD</th>
+          <th scope="col">STRUCTURE</th>
+          <th scope="col">FLUIDE</th>
+          <th scope="col">CPS</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let tb of projects;index as i">
+          <td>{{tb.nom_PROJECT}}</td>
+          <td>{{tb.num_MARCHE}}</td>
+          <td>{{tb.num_CONTRAT}}</td>
+          <td>{{tb.maitre_DOUVRAGE}}</td>
+          <td>{{tb.bureau_DE_CONTROLE}}</td>
+          <td>{{tb.laboratoire}}</td>
+          <td>{{tb.anne_DEPART}}</td>
+          <td>{{tb.anne_FIN}}</td>
+          <td>{{tb.architecte}}</td>
+          <td>{{tb.entreprise}}</td>
+          <td>{{tb.pilote}}</td>
+          <td>{{tb.electricite}}</td>
+          <td>{{tb.vrd}}</td>
+          <td>{{tb.structure}}</td>
+          <td>{{tb.fluide}}</td>
+          <td>{{tb.cps}}</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div *ngIf="show" class="row justify-content-center">
+    <div class="col-xs-12">
+      <button *ngIf="!allinserted && !loding" (click)="insertAll()" class="btn btn-outline-success">Inserer tout
+      </button>
+      <app-spinner *ngIf="loding"></app-spinner>
+      <span *ngIf="allinserted" style="color: lime;font-size: 30px">&#10004;</span>
+    </div>
+  </div>
+</div>
+
+
+
+

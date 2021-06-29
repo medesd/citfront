@@ -1,0 +1,14 @@
+<table *ngIf="loginTemps" class="table text-center">
+  <thead>
+  <tr>
+    <th>Nom d'utilisateur</th>
+    <th>La date de connection</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let tmp of loginTemps">
+    <td>{{tmp.userName}}</td>
+    <td>{{tmp.entryDate | date: 'dd/LL/yyyy - hh:mm a'}}</td>
+  </tr>
+  </tbody>
+</table>

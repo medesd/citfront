@@ -1,0 +1,134 @@
+<div *ngIf="project" class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <form class="form-group" (ngSubmit)="onSubmit(f)" #f="ngForm">
+        <fieldset>
+          <legend style="text-align: center;margin: 5px">Modifier un Projet</legend>
+          <div class="form-group">
+            <label for="id">#</label>
+            <input [ngModel]="project.id" disabled type="text" class="form-control" name="id" id="id">
+          </div>
+          <div class="form-group">
+            <label for="nom_PROJECT">NOM DE PROJET</label>
+            <input [ngModel]="project.nom_PROJECT" type="text" class="form-control" name="nom_PROJECT"
+                   id="nom_PROJECT">
+          </div>
+          <div class="form-group">
+            <label for="num_MARCHE">N° MARCHE</label>
+            <input [ngModel]="project.num_MARCHE" type="text" class="form-control" name="num_MARCHE"
+                   id="num_MARCHE">
+          </div>
+          <div class="form-group">
+            <label for="num_CONTRAT">N° CONTRAT</label>
+            <input [ngModel]="project.num_CONTRAT" type="text" class="form-control" name="num_CONTRAT"
+                   id="num_CONTRAT">
+          </div>
+          <div class="form-group">
+            <label for="maitre_DOUVRAGE">MAITRE DOUVRAGE</label>
+            <input [ngModel]="project.maitre_DOUVRAGE" type="text" class="form-control" name="maitre_DOUVRAGE"
+                   id="maitre_DOUVRAGE">
+          </div>
+          <div class="form-group">
+            <label for="localisation">LOCALISATION</label>
+            <input [ngModel]="project.localisation" type="text" class="form-control" name="localisation"
+                   id="localisation">
+          </div>
+          <div class="form-group">
+            <label for="anne_DEPART">ANNE DEPART</label>
+            <input [ngModel]="project.anne_DEPART" pattern="[2-9][0-9]{3}" type="text" maxlength="4"
+                   class="form-control"
+                   name="anne_DEPART" id="anne_DEPART">
+          </div>
+          <div class="form-group">
+            <label for="anne_FIN">ANNE FIN</label>
+            <input [ngModel]="project.anne_FIN" pattern="[2-9][0-9]{3}|[-]" type="text" maxlength="4"
+                   class="form-control"
+                   name="anne_FIN" id="anne_FIN">
+          </div>
+          <div class="form-group">
+            <label for="bureau_DE_CONTROLE">BUREAU DE CONTROLE</label>
+            <input [ngModel]="project.bureau_DE_CONTROLE" type="text" class="form-control"
+                   name="bureau_DE_CONTROLE" id="bureau_DE_CONTROLE">
+          </div>
+          <div class="form-group">
+            <label for="laboratoire">LABORATOIRE</label>
+            <input [ngModel]="project.laboratoire" type="text" class="form-control" name="laboratoire"
+                   id="laboratoire">
+          </div>
+          <div class="form-group">
+            <label for="architecte">ARCHITECTE</label>
+            <input [ngModel]="project.architecte" type="text" class="form-control" name="architecte"
+                   id="architecte">
+          </div>
+          <div class="form-group">
+            <label for="entreprise">ENTREPRISE</label>
+            <input [ngModel]="project.entreprise" type="text" class="form-control" name="entreprise"
+                   id="entreprise">
+          </div>
+          <div class="form-group">
+            <label for="pilote">PILOTE</label>
+            <input [ngModel]="getName(project.pilote)" [pattern]="all" type="text" autocomplete="off" list="list"
+                   class="form-control" name="pilote" id="pilote">
+          </div>
+
+          <div class="form-check">
+            <label class="form-check-inline">
+              <input [ngModel]="getlength(project.electricite)" class="form-check-input" type="checkbox"
+                     name="electricite_val">
+              ELECTRECITE
+            </label><label class="d-block">
+            <input [ngModel]="getName(project.electricite)" [pattern]="all" *ngIf="f.value.electricite_val" autocomplete="off"
+                   list="list" type="text" class="form-control" name="electricite">
+          </label>
+          </div>
+          <div class="form-check">
+            <label class="form-check-inline">
+              <input [ngModel]="getlength(project.fluide)" class="form-check-input" type="checkbox" name="fluide_val">
+              FLUIDE
+            </label><label class="d-block">
+            <input [ngModel]="getName(project.fluide)" [pattern]="all" *ngIf="f.value.fluide_val" list="list" autocomplete="off"
+                   type="text" class="form-control" name="fluide">
+          </label>
+          </div>
+          <div class="form-check">
+            <label class="form-check-inline">
+              <input [ngModel]="getlength(project.structure)" class="form-check-input" type="checkbox"
+                     name="structure_val">
+              STRUCTURE
+            </label><label class="d-block">
+            <input [ngModel]="getName(project.structure)" [pattern]="all" *ngIf="f.value.structure_val" list="list" autocomplete="off"
+                   type="text" class="form-control" name="structure">
+          </label>
+          </div>
+          <div class="form-check">
+            <label class="form-check-inline">
+              <input [ngModel]="getlength(project.vrd)" class="form-check-input" type="checkbox" name="vrd_val">
+              VRD
+
+            </label><label class="d-block">
+            <input [ngModel]="getName(project.vrd)" [pattern]="all" *ngIf="f.value.vrd_val" list="list" autocomplete="off"
+                   type="text" class="form-control" name="vrd">
+          </label>
+          </div>
+          <div class="form-check">
+            <label class="form-check-inline">
+              <input [ngModel]="getlength(project.cps)" class="form-check-input" type="checkbox" name="cps_val">
+              CPS
+
+            </label><label class="d-block">
+            <input [ngModel]="getName(project.cps)" [pattern]="all" *ngIf="f.value.cps_val" list="list" autocomplete="off"
+                   type="text" class="form-control" name="cps">
+          </label>
+          </div>
+          <datalist id="list">
+            <option *ngFor="let p of piloteService.pilotesNames">{{getTheName(p)}}</option>
+          </datalist>
+          <button type="submit" *ngIf="!loding" [disabled]="!f.valid" class="btn btn-outline-success m-lg-3">Modifer
+          </button>
+          <app-spinner *ngIf="loding"></app-spinner>
+          <button type="reset" class="btn btn-outline-danger m-lg-3">Rest</button>
+        </fieldset>
+      </form>
+    </div>
+  </div>
+</div>

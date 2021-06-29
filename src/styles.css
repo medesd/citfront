@@ -1,0 +1,23 @@
+/* You can add global styles to this file, and also import other style files */
+.toast-container .ngx-toastr {
+  border-radius: 15px !important;
+}
+
+.note-editable p {
+  margin-bottom: 0;
+}
+
+
+.note-editable table {
+  border: 1px solid black !important;
+  max-width: 950px !important;
+  margin-bottom: 0 !important;
+}
+
+.note-editable table td {
+  border: 1px solid black !important;
+}
+
+.note-editable table tr:first-child td {
+  text-align: center !important;
+}

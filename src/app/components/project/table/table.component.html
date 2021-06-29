@@ -1,0 +1,66 @@
+<div class="container">
+  <div class="d-flex flex-row justify-content-between">
+    <div class="col-xs-12" *ngIf="checkAdmin()">
+      <button type="button" routerLink="/ajouter" class="btn btn-outline-success mr-3">Ajouter</button>
+      <button type="button" routerLink="/xslx_ajouter" class="btn btn-outline-info">importer depuis Excel</button>
+    </div>
+
+    <div class="col-xs-12">
+      <form class="form-inline" (ngSubmit)="onSubmit(fro)" #fro="ngForm">
+        <input ngModel name="value" class="form-control mr-sm-2" type="search" placeholder="Recherche"
+               aria-label="Search">
+        <button class="btn btn-outline-dark my-2 my-sm-0" type="submit">
+          <i class="fas fa-search"></i>
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+<br/>
+<app-spinner *ngIf="!lodding"></app-spinner>
+<table *ngIf="lodding" class="table table-striped" style="text-align: center">
+  <thead>
+  <tr>
+    <th scope="col">#</th>
+    <th scope="col">NOM PROJECT</th>
+    <th scope="col">N° MARCHE</th>
+    <th scope="col">N° CONTRAT</th>
+    <th scope="col">MAITRE DOUVRAGE</th>
+    <th scope="col">BUREAU DE CONTROLE</th>
+    <th scope="col">LABORATOIRE</th>
+    <th scope="col">ARCHITECTE</th>
+    <th scope="col">ENTREPRISE</th>
+    <th scope="col">PILOTE</th>
+    <th scope="col"></th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let tb of tableModel;index as i">
+    <th scope="row">{{tb.id}}</th>
+    <td>{{tb.nom_PROJECT}}</td>
+    <td>{{tb.num_MARCHE}}</td>
+    <td>{{tb.num_CONTRAT}}</td>
+    <td>{{tb.maitre_DOUVRAGE}}</td>
+    <td>{{tb.bureau_DE_CONTROLE}}</td>
+    <td>{{tb.laboratoire}}</td>
+    <td>{{tb.architecte}}</td>
+    <td>{{tb.entreprise}}</td>
+    <ng-template [ngIf]="tb.pilote && getName(tb.pilote)!=null">
+      <td *ngIf="getName(tb.pilote).indexOf('&')===-1">
+        <a routerLink="/pilote" [routerLink]="['/pilote/',tb.pilote]">{{getName(tb.pilote)}}</a>
+      </td>
+      <td *ngIf="getName(tb.pilote).indexOf('&')!==-1">
+        <a
+          [routerLink]="['/pilote/',getPiloteIdByName(getPiloteName(getName(tb.pilote))[0])]">{{getPiloteName(getName(tb.pilote))[0]}}</a>,
+        <a
+          [routerLink]="['/pilote/',getPiloteIdByName(getPiloteName(getName(tb.pilote))[1])]">{{getPiloteName(getName(tb.pilote))[1]}}</a>
+      </td>
+    </ng-template>
+    <td *ngIf="!tb.pilote || getName(tb.pilote)==null">-</td>
+    <td>
+      <button class="btn btn-outline-info" [routerLink]="['/details/',tb.id]">Details</button>
+    </td>
+  </tr>
+  </tbody>
+</table>
+

@@ -1,0 +1,42 @@
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <h1 class="text-center">Historique</h1>
+    </div>
+    <div class="row">
+      <form (ngSubmit)="onSubmit(f)" #f="ngForm" class="form-inline">
+        <div class="form-group">
+          <label>
+            <input type="text" ngModel name="search" class="form-control" placeholder="Recherche">
+          </label>
+          <button type="submit" class="btn btn-outline-success ml-3"><i class="fas fa-search"></i></button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="row" *ngIf="error">
+    <div class="col">
+      <h1 style="font-size: 500%;color: gray;text-align: center;margin-top: 30%">{{error.error}}</h1>
+    </div>
+  </div>
+  <table class="table table-striped" *ngIf="pdfs">
+    <thead>
+    <tr>
+      <th>Reference</th>
+      <th>Affaire</th>
+      <th>Date</th>
+      <th>Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let p of pdfs">
+      <td>{{p.reference}}</td>
+      <td>{{p.name | replace }}</td>
+      <td>{{p.entryDate | date: 'dd/LL/YYYY'}}</td>
+      <td>
+        <a class="btn-link" (click)="open(p.reference)" style="cursor: pointer">Consulter</a>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>

@@ -1,0 +1,14 @@
+td{
+  cursor: pointer;
+}
+
+td:focus{
+  outline: unset;
+}
+tr:hover{
+  background-color: #cecece;
+}
+.head:hover{
+  background-color: white;
+}
+

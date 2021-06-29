@@ -1,0 +1,33 @@
+
+<app-spinner *ngIf="loding"></app-spinner>
+<ng-template [ngIf]="!loding">
+<div class="container">
+  <div class="d-flex flex-row justify-content-between">
+    <div class="col-xs-12" *ngIf="checkAdmin()">
+      <button class="btn btn-outline-success mb-sm-2" data-toggle="modal" data-target="#addpilote">Ajouter</button>
+      <div class="modal fade" id="addpilote">
+        <app-ajouter-pilote (plt)="addtolsit($event)" [title]="'Ajouter un pilote'"></app-ajouter-pilote>
+      </div>
+    </div>
+
+  </div>
+</div>
+<table class="table text-sm-center">
+  <thead>
+  <tr class="head">
+    <th scope="col">Nom et Prenom</th>
+    <th scope="col">projets en cours</th>
+  </tr>
+  </thead>
+  <tbody *ngIf="pilotes">
+  <tr *ngFor="let p of pilotes;index as i">
+    <td [routerLink]="['/pilote/',p.id]">
+      {{p.prenom}} {{p.nom}}
+    </td>
+    <td [routerLink]="['/pilote/',p.id]">
+      {{p.len_en}}
+    </td>
+  </tr>
+  </tbody>
+</table>
+</ng-template>

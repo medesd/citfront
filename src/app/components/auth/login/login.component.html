@@ -1,0 +1,36 @@
+<div class="position-absolute w-100 h-100" style="background-image: url(../../../../assets/background.jpg);background-repeat: no-repeat;">
+  <div class="container d-flex align-items-center justify-content-center" style="height: 92vh;text-align: center">
+    <div class="row">
+      <div class="col-xs-12">
+        <ng-template [ngIf]="error">
+          <div class="alert alert-danger" role="alert">
+            Username ou mot de passe sont incorrect
+          </div>
+        </ng-template>
+        <form (ngSubmit)="login(frm)" #frm="ngForm">
+          <div class="jumbotron" style="background-color: rgba(170,147,147,0.5)">
+            <div class="figure-img" style="text-align: center">
+              <img src="../../../../assets/user-3.png" height="150" width="150" alt="avatar"/>
+            </div>
+            <div class="form-group">
+              <label>
+                <input ngModel required type="text" placeholder="Nom d'utilusateur" class="form-control"
+                       name="username">
+              </label>
+            </div>
+            <div class="form-group">
+              <label>
+                <input ngModel required autocomplete="off" type="password" placeholder="mot de passe"
+                       class="form-control" name="password">
+              </label>
+            </div>
+            <button *ngIf="!loding" type="submit" class="btn btn-success">Connecter</button>
+            <app-spinner *ngIf="loding"></app-spinner>
+          </div>
+        </form>
+      </div>
+    </div>
+
+
+  </div>
+</div>
