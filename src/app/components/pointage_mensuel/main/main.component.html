@@ -1,7 +1,7 @@
 <div class="container-fluid" *ngIf="personnes && joursFirier">
   <div>
     <div class="row justify-content-center mb-2">
-      <div class="col-2 border">
+      <div class="col-3 border">
         <h2 class="text-center m-1">{{dates[15]|date: 'LLLL YYYY':'':locale}}</h2>
       </div>
     </div>
@@ -49,7 +49,8 @@
             {{p.groupe.name}}
           </popper-content>
         </td>
-        <td [popperDisabled]="i.getDay()===0 || findJours(i)||getAbsence(p,i)===3" [popper]="popper"
+        <td [popperDisabled]="i.getDay()===0 || findJours(i)||getAbsence(p,i)===3 || getAbsence(p,i)===4"
+            [popper]="popper"
             [popperStyles]="{padding:'3px',border:'none',border:'1px solid black'}"
             [popperTrigger]="'click'"
             [popperPlacement]="'bottom'" *ngFor="let i of dates"
@@ -57,6 +58,7 @@
             [class.bg-danger]="getAbsence(p,i)===1"
             [class.bg-warning]="getAbsence(p,i)===2"
             [class.bg-secondary]="getAbsence(p,i)===3"
+            [class.bg-primary]="getAbsence(p,i)===4"
         >
           <div>
             <popper-content #popper>
@@ -77,7 +79,8 @@
   </div>
   <br/>
   <div class="row">
-    <div class="col table-responsive">
+    <div class="col">
+      <div></div>
       <table class="table table-bordered">
         <thead>
         <tr>
@@ -85,26 +88,28 @@
           <td>Absent</td>
           <td>Present</td>
           <td>Conges</td>
+          <td>Action</td>
         </tr>
         </thead>
-        <tbody>
-        <tr *ngFor="let p of personnes">
+        <tbody *ngIf="gestion">
+        <tr *ngFor="let p of gestion">
           <td>{{p.name}}</td>
-          <td>{{absentInMonth(p.absence)}}</td>
-          <td>{{presentInMonth(p.absence)}}</td>
-          <td>{{congesInMonth(p.absence, p.conges)}}</td>
+          <td>{{p.absence}}</td>
+          <td>{{p.present}}</td>
+          <td>{{p.conges}}</td>
+          <td><a class="alert-link" (click)="deleteEmployee(p.id)">Supprimer</a></td>
         </tr>
         </tbody>
       </table>
     </div>
-    <div class="col">
+    <div class="col d-flex flex-column-reverse justify-content-center">
       <!-- Button trigger modal -->
-      <button type="button" class="btn btn-primary btn-lg mr-2" data-toggle="modal" data-target="#modelId">
+      <button type="button" class="btn btn-primary m-2" data-toggle="modal" data-target="#modelId">
         Gerer des conges
       </button>
 
       <!-- Button trigger modal -->
-      <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#groupes">
+      <button type="button" class="btn btn-primary m-2" data-toggle="modal" data-target="#groupes">
         Ajouter un groupe
       </button>
 
@@ -114,7 +119,7 @@
         <div class="modal-dialog" role="document">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title">Modal title</h5>
+              <h5 class="modal-title">Ajouter un groupe</h5>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
@@ -127,7 +132,7 @@
               </div>
 
               <button type="submit" class="btn btn-success mr-2">Ajouter</button>
-              <button type="button" class="btn btn-secondary ml-2" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-secondary ml-2" data-dismiss="modal">Fermer</button>
             </form>
           </div>
         </div>
@@ -135,7 +140,7 @@
 
 
       <!-- Button trigger modal -->
-      <button type="button" class="btn btn-primary btn-lg ml-2" data-toggle="modal" data-target="#Employe">
+      <button type="button" class="btn btn-primary m-2" data-toggle="modal" data-target="#Employe">
         Ajouter un Employee
       </button>
 
@@ -153,59 +158,62 @@
             <div *ngIf="personnes" class="modal-body">
               <h3 class="text-center">Ajouter</h3>
               <form (ngSubmit)="insertConges(cng)" #cng='ngForm' class="row justify-content-center">
-                <div class="form-group">
+                <div class="col form-group">
                   <label for="employee"></label>
-                  <select [ngModel]="personnes[0]?.name" required class="form-control" name="employee" id="employee">
+                  <select [ngModel]="personnes[0]?.name" required class="form-control m-2" name="employee"
+                          id="employee">
                     <option *ngFor="let i of personnes">{{i.name}}</option>
                   </select>
                 </div>
 
-                <div class="form-inline">
-                  <div class="form-group">
-                    <label for="from">&nbsp;From:&nbsp;</label>
-                    <input ngModel type="date" required name="from" id="from" class="form-control" placeholder=""
-                           aria-describedby="helpId">
-                  </div>
+
+                <div class="col form-group">
+                  <label for="from">&nbsp;From:&nbsp;</label>
+                  <input ngModel type="date" required name="from" id="from" class="form-control" placeholder=""
+                         aria-describedby="helpId">
                 </div>
 
-                <div class="form-inline">
-                  <div class="form-group">
-                    <label for="to">&nbsp;To:&nbsp;</label>
-                    <input ngModel type="date" required name="to" id="to" class="form-control" placeholder=""
-                           aria-describedby="helpId">
-                  </div>
+
+                <div class="col form-group">
+                  <label for="to">&nbsp;nomber&nbsp;</label>
+                  <input ngModel type="number" required name="to" id="to" class="form-control" placeholder=""
+                         aria-describedby="helpId">
                 </div>
 
-                <button type="submit" class="btn btn-success m-3">Ajouter</button>
+                <div class="col-xs">
+
+                  <button type="submit" class="btn btn-success m-4">Ajouter</button>
+                </div>
+
               </form>
               <hr/>
               <h3 class="text-center">Supprimer</h3>
               <form (ngSubmit)="deleteConges(crg)" #crg='ngForm' class="row justify-content-center">
-                <div class="form-group">
+                <div class="col form-group">
                   <label for="employeed"></label>
-                  <select [ngModel]="personnes[0]?.name" required class="form-control" name="employee" id="employeed">
+                  <select [ngModel]="personnes[0]?.name" required class="form-control m-2" name="employee"
+                          id="employeed">
                     <option *ngFor="let i of personnes">{{i.name}}</option>
                   </select>
                 </div>
 
-                <div class="form-inline">
-                  <div class="form-group">
-                    <label for="fromd">&nbsp;From:&nbsp;</label>
-                    <input ngModel type="date" required name="from" id="fromd" class="form-control" placeholder=""
-                           aria-describedby="helpId">
-                  </div>
+
+                <div class="col form-group">
+                  <label for="fromd">&nbsp;From:&nbsp;</label>
+                  <input ngModel type="date" required name="from" id="fromd" class="form-control" placeholder=""
+                         aria-describedby="helpId">
                 </div>
 
-                <div class="form-inline">
-                  <div class="form-group">
-                    <label for="tod">&nbsp;To:&nbsp;</label>
-                    <input ngModel type="date" required name="to" id="tod" class="form-control" placeholder=""
-                           aria-describedby="helpId">
-                  </div>
+
+                <div class="col form-group">
+                  <label for="tod">&nbsp;To:&nbsp;</label>
+                  <input ngModel type="date" required name="to" id="tod" class="form-control" placeholder=""
+                         aria-describedby="helpId">
                 </div>
 
-                <button type="submit" class="btn btn-success m-3">Ajouter</button>
-
+                <div class="col-xs">
+                  <button type="submit" class="btn btn-danger m-4">Supprimer</button>
+                </div>
               </form>
             </div>
             <div class="modal-footer">
@@ -246,16 +254,19 @@
 
                   <div class="form-group">
                     <label for="groupe">groupe: </label>
-                    <input type="text" autocomplete="off" list="lst" ngModel name="groupe" id="groupe"
-                           class="form-control ml-2"
-                           placeholder="">
+                    <select class="form-control" name="groupe" [ngModel]="groups[0].name" id="groupe">
+                      <option *ngFor="let g of groups" [value]="g.name">{{g.name}}</option>
+                    </select>
+                    <!-- <input type="text" autocomplete="off" list="lst" ngModel name="groupe" id="groupe"
+                            class="form-control ml-2"
+                            placeholder="">-->
                   </div>
-                  <datalist id="lst" *ngIf="groups">
-                    <option *ngFor="let d of groups">{{d.name}}</option>
-                  </datalist>
+                  <!-- <datalist id="lst" *ngIf="groups">
+                     <option *ngFor="let d of groups">{{d.name}}</option>
+                   </datalist>-->
 
                   <button type="submit" class="btn btn-success mr-2">Ajouter</button>
-                  <button type="button" class="btn btn-secondary ml-2" data-dismiss="modal">Close</button>
+                  <button type="button" class="btn btn-secondary ml-2" data-dismiss="modal">Fermer</button>
                 </form>
               </div>
             </div>
