@@ -1,4 +1,5 @@
-<div class="container-fluid" *ngIf="personnes && joursFirier">
+<app-spinner *ngIf="!personnes || !joursFirier || !groups || !gestion || !dates"></app-spinner>
+<div class="container-fluid" *ngIf="personnes && joursFirier && groups && gestion && dates">
   <div>
     <div class="row justify-content-center mb-2">
       <div class="col-3 border">
@@ -20,8 +21,10 @@
       <thead>
       <tr>
         <th rowspan="2" class="align-middle">PERSONNEL</th>
-        <th *ngFor="let i of dates" [popper]="p" [popperDisabled]="getJours(i)===null" [popperTrigger]="'hover'"
-            [popperStyles]="{backgroundColor:'black',color:'#fff'}" class="align-middle text-center"
+        <th *ngFor="let i of dates" [popper]="pkk" [popperTrigger]="'hover'"
+            popperDelay="0"
+            popperTimeout="0"
+            [popperStyles]="{backgroundColor:'black',color:'#ffffff'}" class="align-middle text-center"
             [class.bg-success]="dateNow(i)"
             [class.bg-warning]="i.getDay()===0"
             [class.bg-danger]="findJours(i)">
@@ -31,7 +34,7 @@
           <div>
             {{i|date:'dd'}}
           </div>
-          <popper-content #p>
+          <popper-content [class.d-none]="getJours(i)===null" #pkk>
             {{getJours(i)}}
           </popper-content>
         </th>
@@ -41,6 +44,8 @@
       <tr *ngFor="let p of personnes">
         <td
           [popperTrigger]="'hover'"
+          popperDelay="0"
+          popperTimeout="0"
           [popperStyles]="{border:'none',backgroundColor:'black',color:'white'}"
           [popperPlacement]="'top'"
           [popper]="grp">
@@ -49,20 +54,17 @@
             {{p.groupe.name}}
           </popper-content>
         </td>
-        <td [popperDisabled]="i.getDay()===0 || findJours(i)||getAbsence(p,i)===3 || getAbsence(p,i)===4"
-            [popper]="popper"
+        <td [popper]="popper"
+            popperDelay="0"
+            popperTimeout="0"
             [popperStyles]="{padding:'3px',border:'none',border:'1px solid black'}"
             [popperTrigger]="'click'"
             [popperPlacement]="'bottom'" *ngFor="let i of dates"
-            [class.bg-dark]="i.getDay()===0 || findJours(i)"
-            [class.bg-danger]="getAbsence(p,i)===1"
-            [class.bg-warning]="getAbsence(p,i)===2"
-            [class.bg-secondary]="getAbsence(p,i)===3"
-            [class.bg-primary]="getAbsence(p,i)===4"
-        >
+            [className]="eventClass(i,p)">
           <div>
-            <popper-content #popper>
-              <button type="button" (click)="makeAction($event,1,p.id,i)" class="btn btn-danger mb-1">Absent 1/1
+            <popper-content [class.d-none]="popperDisabled(i,p)" #popper>
+              <button type="button" *ngIf="i.getDay()!==6" (click)="makeAction($event,1,p.id,i)"
+                      class="btn btn-danger mb-1">Absent 1/1
               </button>
               <button type="button" (click)="makeAction($event,2,p.id,i)" class="btn btn-warning mb-1">Absent 1/2
               </button>
@@ -88,7 +90,7 @@
           <td>Absent</td>
           <td>Present</td>
           <td>Conges</td>
-          <td>Action</td>
+          <!--<td>Action</td>-->
         </tr>
         </thead>
         <tbody *ngIf="gestion">
@@ -97,54 +99,23 @@
           <td>{{p.absence}}</td>
           <td>{{p.present}}</td>
           <td>{{p.conges}}</td>
-          <td><a class="alert-link" (click)="deleteEmployee(p.id)">Supprimer</a></td>
+          <!--<td><a class="alert-link" (click)="deleteEmployee(p.id)">Supprimer</a></td>-->
         </tr>
         </tbody>
       </table>
     </div>
-    <div class="col d-flex flex-column-reverse justify-content-center">
-      <!-- Button trigger modal -->
+    <div class="col d-flex flex-column justify-content-start">
+
       <button type="button" class="btn btn-primary m-2" data-toggle="modal" data-target="#modelId">
         Gerer des conges
       </button>
 
-      <!-- Button trigger modal -->
-      <button type="button" class="btn btn-primary m-2" data-toggle="modal" data-target="#groupes">
-        Ajouter un groupe
+      <button type="button" class="btn btn-primary m-2" data-toggle="modal" data-target="#groupgere">
+        Gerer les Groupes
       </button>
 
-      <!-- Modal -->
-      <div class="modal fade" id="groupes" tabindex="-1" role="dialog" aria-labelledby="modelTitleId"
-           aria-hidden="true">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title">Ajouter un groupe</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <form (ngSubmit)="addGroupe(h)" #h='ngForm' class="modal-body">
-              <div class="form-group">
-                <label for="grp">nom de Groupe</label>
-                <input ngModel type="text"
-                       class="form-control" name="name" id="grp">
-              </div>
 
-              <button type="submit" class="btn btn-success mr-2">Ajouter</button>
-              <button type="button" class="btn btn-secondary ml-2" data-dismiss="modal">Fermer</button>
-            </form>
-          </div>
-        </div>
-      </div>
-
-
-      <!-- Button trigger modal -->
-      <button type="button" class="btn btn-primary m-2" data-toggle="modal" data-target="#Employe">
-        Ajouter un Employee
-      </button>
-
-      <!-- Modal -->
+      <!-- Gerer les Conges -->
       <div class="modal fade" id="modelId" tabindex="-1" role="dialog" aria-labelledby="modelTitleId"
            aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -224,51 +195,95 @@
       </div>
 
 
-      <!-- Modal -->
-      <div class="modal fade" id="Employe" tabindex="-1" role="dialog" aria-labelledby="modelTitleId"
+      <!-- Gerer les groupes -->
+      <div class="modal fade" id="groupgere" tabindex="-1" role="dialog" aria-labelledby="modelTitleId"
            aria-hidden="true">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title">Ajouter Employee</h5>
+              <h5 class="modal-title">Gerer les groupes</h5>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
             <div class="modal-body">
-              <div *ngIf="groups.length===0">
-                <h2>Aucune Groupes</h2>
-              </div>
-              <div *ngIf="groups.length>0" class="row justify-content-center">
-                <form (ngSubmit)="addEmployee(f)" #f="ngForm">
-                  <div class="form-group">
-                    <label for="emp">Ajouter Employee: </label>
-                    <input type="text" ngModel required name="name" id="emp" class="form-control ml-2" placeholder="">
+              <h2 class="text-center">Gerer un groupe</h2>
+
+              <form (ngSubmit)="addGroupe(h)" #h='ngForm'>
+                <table class="m-auto">
+                  <tbody>
+                  <tr>
+                    <td>
+                      <div class="form-group">
+                        <label for="gpname"></label>
+                        <input type="text" name="name" ngModel id="gpname" class="form-control"
+                               placeholder="Nom de Groupe">
+                      </div>
+                    </td>
+                    <td>
+                      <button type="submit" class="btn btn-success ml-2">Ajouter</button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="form-group">
+                        <label for="gpnamedl"></label>
+                        <select [value]="groups[0]" #deleteGp id="gpnamedl" class="form-control">
+                          <option *ngFor="let ol of groups">{{ol.name}}</option>
+                        </select>
+                      </div>
+                    </td>
+                    <td>
+                      <button type="button" (click)="deleteGroupe()" class="btn btn-danger ml-2">Supprimer</button>
+                    </td>
+                  </tr>
+                  </tbody>
+                </table>
+              </form>
+              <br>
+              <hr/>
+              <h2 class="text-center">Gerer les Personnes</h2>
+
+              <div class="form-group">
+                <label for="groupeGeres"></label>
+                <select (change)="getPersonnesInGroupe($event)" #gpaddemp [value]="groups[0]" class="form-control"
+                        name="groupeGeres"
+                        id="groupeGeres">
+                  <option *ngFor="let ll of groups" [value]="ll.name">{{ll.name}}</option>
+                </select>
+                <hr/>
+                <table class="table table-bordered w-100">
+                  <thead>
+                  <tr>
+                    <td>Nom</td>
+                    <td>Action</td>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr *ngFor="let kk of personnesInGroupe">
+                    <td>
+                      {{kk.name}}
+                    </td>
+                    <td>
+                      <a (click)="deleteEmployee(kk.id)" class="text-danger alert-link">Supprimer</a>
+                    </td>
+                  </tr>
+                  </tbody>
+                </table>
+                <form (ngSubmit)="addEmployee(t)" #t='ngForm'>
+                  <div class="form-group d-flex justify-content-around">
+                    <label for=""></label>
+                    <input type="text" class="form-control m-2" required name="name" ngModel id=""
+                           placeholder="Ajouter un Personne">
+                    <input type="number" [ngModel]="18" placeholder="nombre de Conges" required class="form-control m-2"
+                           name="conges">
+                    <button [disabled]="!t.valid" class="btn btn-success text-center m-2">Ajouter</button>
                   </div>
-
-                  <div class="form-group">
-                    <label for="conges">Conges: </label>
-                    <input type="text" ngModel name="conges" id="conges" class="form-control ml-2" placeholder="">
-                  </div>
-
-
-                  <div class="form-group">
-                    <label for="groupe">groupe: </label>
-                    <select class="form-control" name="groupe" [ngModel]="groups[0].name" id="groupe">
-                      <option *ngFor="let g of groups" [value]="g.name">{{g.name}}</option>
-                    </select>
-                    <!-- <input type="text" autocomplete="off" list="lst" ngModel name="groupe" id="groupe"
-                            class="form-control ml-2"
-                            placeholder="">-->
-                  </div>
-                  <!-- <datalist id="lst" *ngIf="groups">
-                     <option *ngFor="let d of groups">{{d.name}}</option>
-                   </datalist>-->
-
-                  <button type="submit" class="btn btn-success mr-2">Ajouter</button>
-                  <button type="button" class="btn btn-secondary ml-2" data-dismiss="modal">Fermer</button>
                 </form>
               </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
             </div>
           </div>
         </div>
@@ -279,3 +294,6 @@
 
   </div>
 </div>
+
+
+<div *ngIf="refresh">{{gestionRes()}}</div>

@@ -4,8 +4,7 @@ import {Absence, Personne} from '../../models/personne.model';
 import {Groupe} from '../../models/groupe.model';
 import {Observable} from 'rxjs';
 import {Jours} from '../../models/jours.model';
-import {Environment} from "@angular/compiler-cli/src/ngtsc/typecheck/src/environment";
-import {environment} from "../../../environments/environment";
+import {environment} from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -60,7 +59,7 @@ export class PointageService {
             jours.push(jour);
           }
         });
-        this.http.post<number>(environment.site + '/personne/jours', jours).subscribe(p => console.log(p));
+        this.http.post<number>(environment.site + '/personne/jours', jours).subscribe(() => null);
       }
     });
   }
@@ -79,5 +78,13 @@ export class PointageService {
 
   deletePersonne(id: number): Observable<number> {
     return this.http.delete<number>(environment.site + '/personne/' + id);
+  }
+
+  getPersonnesInGroupe(id: number): Observable<Personne[]> {
+    return this.http.get<Personne[]>(environment.site + '/groupe/' + id);
+  }
+
+  deleteGroupe(id: number): Observable<number> {
+    return this.http.delete<number>(environment.site + '/groupe/' + id);
   }
 }

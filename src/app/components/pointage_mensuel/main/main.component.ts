@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import localeFr from '@angular/common/locales/fr';
 import {registerLocaleData} from '@angular/common';
 import {NgForm} from '@angular/forms';
@@ -15,6 +15,8 @@ import {ToastrService} from 'ngx-toastr';
   styleUrls: ['./main.component.css']
 })
 export class MainComponent implements OnInit {
+  @ViewChild('deleteGp') deleteGp: ElementRef;
+  @ViewChild('gpaddemp') gpAddEmp: ElementRef;
   groups: Groupe[];
   date = new Date();
   locale = 'fr';
@@ -23,6 +25,8 @@ export class MainComponent implements OnInit {
   dates: Date[] = [];
   personnes: Personne[];
   gestion: { name: string, absence: number, present: number, conges: number, id: number }[];
+  personnesInGroupe: Personne[];
+  refresh = false;
 
   constructor(private pointageService: PointageService, private toastrService: ToastrService) {
     registerLocaleData(localeFr, this.locale);
@@ -50,33 +54,33 @@ export class MainComponent implements OnInit {
   }
 
   addEmployee(form: NgForm): void {
-    if (this.groups.findIndex(p => p.name.trim() === form.value.name.trim()) !== -1) {
+    if (this.personnes.findIndex(p => p.name.trim() === form.value.name.trim()) !== -1) {
       this.toastrService.error('Employee deja exist');
       return;
     }
-    const g = this.groups.find(p => p.name === form.value.groupe);
+    const g = this.groups.find(p => p.name === this.gpAddEmp.nativeElement.value.trim());
     this.pointageService.addPersonne({...form.value, groupe: g}).subscribe(data => {
       this.personnes.push(data);
       this.toastrService.success('ajouter avec succes');
+      this.personnesInGroupe.push(data);
       this.gestionRes();
     });
   }
 
   ngOnInit(): void {
-
     this.dates = [];
     this.groups = [];
     this.personnes = [];
     this.joursFirier = [];
     this.getGroupes();
     this.pointageService.getJoursFirier().subscribe(data => {
-      this.joursFirier = data;
+      this.joursFirier = data.filter(p => new Date(p.entryDate).getFullYear() === this.date.getFullYear());
     });
 
     this.pointageService.getPersonnes().subscribe(data => {
       this.personnes = data;
       this.gestionRes();
-      console.log(data);
+      this.refresh = true;
     });
 
     const daysInMonth = new Date(this.date.getFullYear(), this.mouth + 1, 0).getDate();
@@ -85,7 +89,6 @@ export class MainComponent implements OnInit {
       const d = this.date;
       this.dates.push(new Date(d.toString()));
     }
-
   }
 
   getDateNow(): void {
@@ -101,30 +104,41 @@ export class MainComponent implements OnInit {
   }
 
   presentInMonth(absents: Absence[]): number {
-    console.error();
-    return this.dates.filter(f => f.getDay() !== 0)
+    const even = absents.filter(p => new Date(p.entryDate).getFullYear() === this.date.getFullYear() &&
+      new Date(p.entryDate).getMonth() === this.date.getMonth() && p.type === 2).length * 0.5;
+
+
+    return (/*this.dates.filter(f => f.getDay() !== 0)
       .filter(f => this.joursFirier.findIndex(d => this.compareDate(f, d.entryDate)) === -1)
-      .length - absents.filter(p => new Date(p.entryDate).getFullYear() === this.date.getFullYear() &&
+      .length*/26 - absents.filter(p => new Date(p.entryDate).getFullYear() === this.date.getFullYear() &&
       new Date(p.entryDate).getMonth() === this.date.getMonth())
       .filter(p => new Date(p.entryDate).getDay() !== 0)
       .filter(p => new Date(p.entryDate).getDay() !== 6)
       .filter(p => this.joursFirier.findIndex(d => this.compareDate(d.entryDate, p.entryDate)) === -1)
-      .length;
+      .filter(p => p.type !== 2)
+      .filter(p => p.type !== 3)
+      .length) - even;
 
   }
 
   absentInMonth(absents: Absence[]): number {
+    const even = absents.filter(p => new Date(p.entryDate).getFullYear() === this.date.getFullYear() &&
+      new Date(p.entryDate).getMonth() === this.date.getMonth() && p.type === 2).length * 0.5;
+
     return absents.filter(p => new Date(p.entryDate).getFullYear() === this.date.getFullYear() &&
-      new Date(p.entryDate).getMonth() === this.date.getMonth() && p.type !== 3 && p.type !== 4).length;
+      new Date(p.entryDate).getMonth() === this.date.getMonth() && p.type !== 3 && p.type !== 4 && p.type !== 2).length + even;
   }
 
   congesInMonth(absents: Absence[], conges: number): number {
+    const even = absents.filter(p => new Date(p.entryDate).getFullYear() === this.date.getFullYear() &&
+      new Date(p.entryDate).getMonth() === this.date.getMonth() && p.type === 2).length * 0.5;
     return conges - absents
       .filter(p => new Date(p.entryDate).getDay() !== 6)
       .filter(p => new Date(p.entryDate).getDay() !== 0)
       .filter(p => this.joursFirier.findIndex(d => this.compareDate(p.entryDate, d.entryDate)) === -1)
       .filter(p => new Date(p.entryDate).getFullYear() === this.date.getFullYear())
-      .length;
+      .filter(p => p.type !== 2)
+      .length - even;
   }
 
   getJours(jours: Date): string {
@@ -206,7 +220,6 @@ export class MainComponent implements OnInit {
       dates[0].getDay() === 6 ||
       this.joursFirier.findIndex(p => this.compareDate(p.entryDate, dates[0])) !== -1) {
       second++;
-      console.error(dates[0]);
     }
     for (let i = 0; i < second - 1; i++) {
       today.add(1, 'days');
@@ -217,8 +230,6 @@ export class MainComponent implements OnInit {
         second++;
       }
     }
-
-    console.log(dates);
 
 
     const personne = this.personnes.find(p => p.name === form.value.employee);
@@ -283,8 +294,11 @@ export class MainComponent implements OnInit {
 
   getGroupes(): void {
     this.pointageService.getGroupes().subscribe(d => {
-      console.log(d);
       this.groups = d;
+
+      this.pointageService.getPersonnesInGroupe(d[0].id).subscribe(data => {
+        this.personnesInGroupe = data;
+      });
     });
   }
 
@@ -302,27 +316,18 @@ export class MainComponent implements OnInit {
     }
   }
 
-
   deleteConges(form: NgForm): void {
-    const name = form.value.employee;
-
     const first = moment(new Date(form.value.from));
     const second = moment(new Date(form.value.to));
-
     if (first >= second) {
       return;
     }
-
     const today = first;
-
-    console.log(today.date(), today.month(), today.year());
     const dates: Date[] = [today.toDate()];
     while (today < second) {
       today.add(1, 'days');
       dates.push(new Date(today.toDate()));
     }
-
-    console.log(dates.filter(f => f.getDay() === 0));
     const personne = this.personnes.find(p => p.name === form.value.employee);
     this.pointageService.deleteConges(personne.id, dates).subscribe(d => {
       if (d === null) {
@@ -335,10 +340,55 @@ export class MainComponent implements OnInit {
   }
 
   deleteEmployee(id: number): void {
-    this.pointageService.deletePersonne(id).subscribe(d => {
+    this.pointageService.deletePersonne(id).subscribe(() => {
       this.personnes = this.personnes.filter(p => p.id !== id);
+      this.personnesInGroupe = this.personnesInGroupe.filter(p => p.id !== id);
       this.gestionRes();
     });
+  }
+
+  getPersonnesInGroupe(evt): void {
+    const personne = this.groups.find(p => p.name.trim() === evt.target.value.trim());
+    this.pointageService.getPersonnesInGroupe(personne.id).subscribe(data => {
+      this.personnesInGroupe = data;
+    });
+  }
+
+
+  popperDisabled(i: Date, p: Personne): boolean {
+    return i.getDay() === 0 || this.findJours(i) || this.getAbsence(p, i) === 3 || this.getAbsence(p, i) === 4;
+  }
+
+
+  deleteGroupe(): void {
+    const gp = this.groups.find(g => this.deleteGp.nativeElement.value.trim() === g.name.trim());
+    this.pointageService.deleteGroupe(gp.id).subscribe(data => {
+      this.groups = this.groups.filter(p => p.id !== data);
+      this.pointageService.getPersonnesInGroupe(this.groups[0].id).subscribe(ds => {
+        this.personnesInGroupe = ds;
+      });
+    });
+  }
+
+  eventClass(i: Date, p: Personne): string {
+    if (this.findJours(i)) {
+      return 'bg-dark';
+    }
+    if (i.getDay() === 0) {
+      return 'bg-dark';
+    }
+    if (this.getAbsence(p, i) === 1) {
+      return 'bg-danger';
+    }
+    if (this.getAbsence(p, i) === 2) {
+      return 'bg-warning';
+    }
+    if (this.getAbsence(p, i) === 3) {
+      return 'bg-secondary';
+    }
+    if (this.getAbsence(p, i) === 4) {
+      return 'bg-primary';
+    }
   }
 
 }

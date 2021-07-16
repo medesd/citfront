@@ -21,7 +21,7 @@ h2 {
   border-bottom: 1px solid black !important;
 }
 
-input.ng-invalid.ng-touched{
+input.ng-invalid.ng-touched {
   color: #495057;
   background-color: #fff;
   border-color: red;
@@ -30,6 +30,6 @@ input.ng-invalid.ng-touched{
 }
 
 
-.alert-link:hover{
+.alert-link:hover {
   cursor: pointer;
 }

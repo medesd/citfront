@@ -44,7 +44,8 @@
               "./node_modules/@fortawesome/fontawesome-free/js/all.min.js",
               "./node_modules/html2canvas/dist/html2canvas.min.js",
               "./node_modules/summernote/dist/summernote-lite.min.js"
-            ]
+            ],
+            "webWorkerTsConfig": "tsconfig.worker.json"
           },
           "configurations": {
             "production": {
@@ -116,7 +117,8 @@
             "tsConfig": [
               "tsconfig.app.json",
               "tsconfig.spec.json",
-              "e2e/tsconfig.json"
+              "e2e/tsconfig.json",
+              "tsconfig.worker.json"
             ],
             "exclude": [
               "**/node_modules/**"
