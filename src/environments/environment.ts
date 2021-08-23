@@ -4,8 +4,8 @@
 
 export const environment = {
   production: false,
-  site: 'http://192.168.1.73:8080',
-  //site: 'http://localhost:8080',
+  //site: 'http://192.168.1.73:8080',
+  site: 'http://localhost:8080',
 };
 
 /*

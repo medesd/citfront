@@ -1,3 +1,4 @@
+import { DashboardComponent } from './components/dashboard/dashboard.component';
 import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
 import {HttpClientModule} from '@angular/common/http';
@@ -51,7 +52,7 @@ const appRoute: Routes = [
   {path: 'pilotes', component: PilotesComponent, canActivate: [UserGuard]},
   {path: 'xslx_ajouter', component: AjouterXlsxComponent, canActivate: [AdminGuard]},
   {path: 'signin', component: LoginComponent},
-  {path: '', component: AccountComponent, canActivate: [AdminGuard]},
+  {path: '', component: DashboardComponent, canActivate: [AdminGuard]},
   {path: 'models', component: RaportComponent, canActivate: [AdminGuard]},
   {path: 'model1', component: ModelOneComponent, canActivate: [AdminGuard]},
   {path: 'modelshistory', component: ModelHistoryComponent, canActivate: [AdminGuard]},
